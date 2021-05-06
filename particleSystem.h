@@ -85,8 +85,6 @@ protected:
 	
 	map<int, vector<Particle>> cache;
 	vector<Particle> particles;
-	int numEmit;
-	int maxNumParticles;
 
 	int getFrame(float t) { return t * bake_fps; }
 

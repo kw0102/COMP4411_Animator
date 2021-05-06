@@ -1,6 +1,10 @@
 #ifndef __MATRIX_HEADER__
 #define __MATRIX_HEADER__
 
+#ifndef M_PI
+#define M_PI 3.141592653589793238462643383279502
+#endif
+
 //==========[ Forward References ]=============================================
 
 template <class T> class Vec;
@@ -381,7 +385,27 @@ inline void swap(Mat3<T>& a, Mat3<T>& b) {
 
 template <class T>
 inline Mat4<T> Mat4<T>::createRotation( T angle, float x, float y, float z ) {
-	Mat4<T> rot;
+
+	Vec3d u = Vec3d(x, y, z);
+	u.normalize();
+
+	double _angle = (double)angle * M_PI / 180.0;
+	double c = cos(_angle);
+	double s = sin(_angle);
+
+	T a[16]; // avoid stack  overflow
+
+	a[0] = (c + u[0] * u[0] * (1 - c));
+	a[1] = (u[0] * u[1] * (1 - c) - u[2] * s);
+	a[2] = (u[0] * u[2] * (1 - c) + u[1] * s);
+	a[4] = (u[1] * u[0] * (1 - c) + u[2] * s);
+	a[5] = (c + u[1] * u[1] * (1 - c));
+	a[6] = (u[1] * u[2] * (1 - c) - u[0] * s);
+	a[8] = (u[2] * u[0] * (1 - c) - u[1] * s);
+	a[9] = (u[2] * u[1] * (1 - c) + u[0] * s);
+	a[10] = (c + u[2] * u[2] * (1 - c));
+
+	Mat4<T> rot(a[0], a[1], a[2], 0, a[4], a[5], a[6], 0, a[8], a[9], a[10], 0, 0, 0, 0, 1);
 
 	return rot;
 }

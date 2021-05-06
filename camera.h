@@ -22,7 +22,7 @@ enum KeyframeCurves
 
 class Camera {
     
-protected:
+public:
     
     float		mElevation;
     float		mAzimuth;

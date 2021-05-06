@@ -1,0 +1,36 @@
+Animator Bells and Whistles Checklist for grading 
+(submit ONLY if you have implemented any of the B&Ws below)
+
+HKUST login(s): khwanad, yshiau
+
+Delete yes/no when appropriate
+
+W spline control options			no
+W TGA						no
+W mirror					no
+W billboard					no
+W Fire/snow/water/firworks			no
+W environment mapping				no
+W motion blur					no
+W Runge-Kutta					no
+W OpenGL Display list				yes (used on height field)
+W de Casteljau					no
+B spring-mass system				no
+B collision detection AND handling		no
+B general subdvision curves			no
+B height fields					yes
+B metaballs					yes (snail)
+BW lens flare					no
+BW your great UI idea				no
+2B flocks					yes
+2B C2 interpolating curve			no
+2B edit CR curves				no
+2B UI to select model parts by clicking		no
+2B quaternions					no
+2B bspline surface				no
+3B projected textures				no
+3B motion warping				no
+3B cell shading					no
+4B rigid-body simulations 			no
+4B subdivision surfaces				no
+8B+ mouse/keyboard computer games (using IK)	yes (only the IK part, control in 'modeler' tab)

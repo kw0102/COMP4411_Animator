@@ -65,7 +65,7 @@ public:
 	// Returns animating flag
 	bool Animating();
 
-private:
+public:
 	// Private for singleton
 	ModelerApplication() : m_numControls(-1) { ps = 0; }
 	ModelerApplication(const ModelerApplication&) {}

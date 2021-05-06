@@ -82,7 +82,7 @@ void drawSphere(double r);
 void drawBox( double x, double y, double z );
 
 // Draw an axis-aligned texture box from origin to (x,y,z)
-void drawTextureBox( double x, double y, double z );
+void drawTextureBox( double x, double y, double z , int texture);
 
 // Draw a cylinder from z=0 to z=h with radius r1 at origin and r2 at z=h
 void drawCylinder( double h, double r1, double r2 );
@@ -91,5 +91,8 @@ void drawCylinder( double h, double r1, double r2 );
 void drawTriangle( double x1, double y1, double z1,
 			       double x2, double y2, double z2,
 			       double x3, double y3, double z3 );
+
+void drawTorus(double r0, double r1);
+void calculateTorusVertex(double a0, double r0, double a1, double r1, double* v, double* n);
 
 #endif
