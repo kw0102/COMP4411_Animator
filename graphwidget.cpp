@@ -25,6 +25,9 @@
 #include "GraphWidget.h"
 
 #include "LinearCurveEvaluator.h"
+#include "BSplineCurve.h"
+#include "BezierCurve.h"
+#include "CatmullRomCurve.h"
  
 
 #define LEFT		1
@@ -116,9 +119,11 @@ m_flcCurrCurve(FL_BLACK)
 	m_ppceCurveEvaluators[CURVE_TYPE_LINEAR] = new LinearCurveEvaluator();
 
 	// TODO: replace the linear evaluator for one of the three types of curves
-	m_ppceCurveEvaluators[CURVE_TYPE_BSPLINE] = new LinearCurveEvaluator();
-	m_ppceCurveEvaluators[CURVE_TYPE_BEZIER] = new LinearCurveEvaluator();
-	m_ppceCurveEvaluators[CURVE_TYPE_CATMULLROM] = new LinearCurveEvaluator();
+	m_ppceCurveEvaluators[CURVE_TYPE_BSPLINE] = new BSplineCurveEvaluator();
+	m_ppceCurveEvaluators[CURVE_TYPE_BEZIER] = new BezierCurveEvaluator();
+	m_ppceCurveEvaluators[CURVE_TYPE_CATMULLROM] = new CatmullRomCurveEvaluator();
+
+
 	// Note that C2-Interpolating curve is not a requirement
 	m_ppceCurveEvaluators[CURVE_TYPE_C2INTERPOLATING] = new LinearCurveEvaluator();
 
@@ -1137,3 +1142,36 @@ Point GraphWidget::gridToWindow( Point p ) {
 	return val;
 }
 
+
+int GraphWidget::currCurveAdaptive() const
+{
+	if (m_iCurrCurve >= 0) {
+		bool bAdaptive = m_pcrvvCurves[m_iCurrCurve]->adaptive();
+		return bAdaptive ? 1 : 0;
+	}
+	return -1;
+}
+void GraphWidget::currCurveAdaptive(bool bAdaptive)
+{
+	if (m_iCurrCurve >= 0) {
+		m_pcrvvCurves[m_iCurrCurve]->adaptive(bAdaptive);
+	}
+}
+
+double GraphWidget::currCurveTension() const
+{
+	if (m_iCurrCurve >= 0)
+	{
+		double dTension = m_pcrvvCurves[m_iCurrCurve]->tension();
+		return dTension;
+	}
+	return -1;
+}
+
+void GraphWidget::currCurveTension(double dTension)
+{
+	if (m_iCurrCurve >= 0)
+	{
+		m_pcrvvCurves[m_iCurrCurve]->tension(dTension);
+	}
+}
