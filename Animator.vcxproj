@@ -263,7 +263,6 @@
     </ClCompile>
     <ClCompile Include="SimplexNoise.cpp" />
     <ClCompile Include="Spongebob.cpp" />
-    <ClCompile Include="subdivisionCurve.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BezierCurve.h" />
@@ -296,7 +295,6 @@
     <ClInclude Include="mat.h" />
     <ClInclude Include="SimplexNoise.h" />
     <ClInclude Include="Spongebob.h" />
-    <ClInclude Include="subdivisionCurve.h" />
     <ClInclude Include="vec.h" />
   </ItemGroup>
   <ItemGroup>
