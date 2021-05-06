@@ -26,6 +26,8 @@
 #include "modelerui.h"
 #include "camera.h"
 
+#include "modelerglobals.h"
+
 using namespace std;
 
 inline void ModelerUI::cb_openAniScript_i(Fl_Menu_*, void*)
@@ -759,6 +761,11 @@ float ModelerUI::controlValue(int iControl) const
 #ifdef _DEBUG
 	assert(iControl >= 0 && iControl < m_iCurrControlCount);
 #endif _DEBUG
+
+	if (iControl == IK_LIMB)
+	{
+		return valueSlider(iControl)->value();
+	}
 
 	if (m_ptabTab->value() != (Fl_Widget*)m_pgrpCurveGroup) {
 		// slider control mode

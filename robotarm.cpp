@@ -8,9 +8,12 @@
 #include "modelerapp.h"
 #include "modelerdraw.h"
 #include "particleSystem.h"
+#include "bitmap.h"
+#include "camera.h"
 
 
 #include <FL/gl.h>
+#include <FL/glu.h>
 #include <stdlib.h>
 
 #define M_DEFAULT 2.0f
@@ -57,11 +60,16 @@ class RobotArm : public ModelerView
 public:
     RobotArm(int x, int y, int w, int h, char *label) 
         : ModelerView(x,y,w,h,label) {
-		emitter = new ParticleEmitter();
+		emitter = new ParticleEmitter(FLOCKING, 200, 200);
 		ModelerApplication::Instance()->GetParticleSystem()->addEmitter(emitter);
 	}
     virtual void draw();
 	ParticleEmitter* emitter;
+
+	bool loadedTexture = false;
+	GLuint _skybox[6];
+	char skybox_path[6][50] = { "assets/uw_lf.bmp" , "assets/uw_ft.bmp" , "assets/uw_rt.bmp", "assets/uw_bk.bmp" , "assets/uw_up.bmp" , "assets/uw_dn.bmp" };
+	void skybox();
 };
 
 // We need to make a creator function, mostly because of
@@ -105,6 +113,8 @@ void RobotArm::draw()
 
 	Mat4d cameraMatrix = getModelViewMatrix();
 
+	skybox();
+
 	ground(-0.2);
 
 	base(0.8);
@@ -130,6 +140,112 @@ void RobotArm::draw()
 
 	//*** DON'T FORGET TO PUT THIS IN YOUR OWN CODE **/
 	endDraw();
+}
+
+void RobotArm::skybox()
+{
+
+	if (!loadedTexture)
+	{
+		for (int i = 0; i < 6; i++)
+		{
+			int width, height;
+			GLubyte* bitmap = readBMP(skybox_path[i], width, height);
+			if (bitmap) {
+				glGenTextures(1, &_skybox[i]);
+				glBindTexture(GL_TEXTURE_2D, _skybox[i]);
+
+				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
+				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
+				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+				glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0,
+					GL_RGB, GL_UNSIGNED_BYTE, bitmap);
+
+			}
+		}
+		loadedTexture = true;
+	}
+
+	// Store the current matrix
+	glPushMatrix();
+
+	// Reset and transform the matrix.
+	glLoadIdentity();
+	gluLookAt(
+		0, 0, 0,
+		m_camera->mPosition[0], m_camera->mPosition[1], m_camera->mPosition[2],
+		0, 1, 0);
+
+	// Enable/Disable features
+	glPushAttrib(GL_ENABLE_BIT);
+	glEnable(GL_TEXTURE_2D);
+	glDisable(GL_DEPTH_TEST);
+	glDisable(GL_LIGHTING);
+	glDisable(GL_BLEND);
+
+	// Just in case we set all vertices to white.
+	glColor4f(1, 1, 1, 1);
+	glScaled(100, 100, 100);
+
+	// Render the front quad
+	glBindTexture(GL_TEXTURE_2D, _skybox[0]);
+	glBegin(GL_QUADS);
+	glTexCoord2f(0, 0); glVertex3f(0.5f, -0.5f, -0.5f);
+	glTexCoord2f(1, 0); glVertex3f(-0.5f, -0.5f, -0.5f);
+	glTexCoord2f(1, 1); glVertex3f(-0.5f, 0.5f, -0.5f);
+	glTexCoord2f(0, 1); glVertex3f(0.5f, 0.5f, -0.5f);
+	glEnd();
+
+	// Render the left quad
+	glBindTexture(GL_TEXTURE_2D, _skybox[1]);
+	glBegin(GL_QUADS);
+	glTexCoord2f(0, 0); glVertex3f(0.5f, -0.5f, 0.5f);
+	glTexCoord2f(1, 0); glVertex3f(0.5f, -0.5f, -0.5f);
+	glTexCoord2f(1, 1); glVertex3f(0.5f, 0.5f, -0.5f);
+	glTexCoord2f(0, 1); glVertex3f(0.5f, 0.5f, 0.5f);
+	glEnd();
+
+	// Render the back quad
+	glBindTexture(GL_TEXTURE_2D, _skybox[2]);
+	glBegin(GL_QUADS);
+	glTexCoord2f(0, 0); glVertex3f(-0.5f, -0.5f, 0.5f);
+	glTexCoord2f(1, 0); glVertex3f(0.5f, -0.5f, 0.5f);
+	glTexCoord2f(1, 1); glVertex3f(0.5f, 0.5f, 0.5f);
+	glTexCoord2f(0, 1); glVertex3f(-0.5f, 0.5f, 0.5f);
+
+	glEnd();
+
+	// Render the right quad
+	glBindTexture(GL_TEXTURE_2D, _skybox[3]);
+	glBegin(GL_QUADS);
+	glTexCoord2f(0, 0); glVertex3f(-0.5f, -0.5f, -0.5f);
+	glTexCoord2f(1, 0); glVertex3f(-0.5f, -0.5f, 0.5f);
+	glTexCoord2f(1, 1); glVertex3f(-0.5f, 0.5f, 0.5f);
+	glTexCoord2f(0, 1); glVertex3f(-0.5f, 0.5f, -0.5f);
+	glEnd();
+
+	// Render the top quad
+	glBindTexture(GL_TEXTURE_2D, _skybox[4]);
+	glBegin(GL_QUADS);
+	glTexCoord2f(0, 1); glVertex3f(-0.5f, 0.5f, -0.5f);
+	glTexCoord2f(0, 0); glVertex3f(-0.5f, 0.5f, 0.5f);
+	glTexCoord2f(1, 0); glVertex3f(0.5f, 0.5f, 0.5f);
+	glTexCoord2f(1, 1); glVertex3f(0.5f, 0.5f, -0.5f);
+	glEnd();
+
+	// Render the bottom quad
+	glBindTexture(GL_TEXTURE_2D, _skybox[5]);
+	glBegin(GL_QUADS);
+	glTexCoord2f(0, 0); glVertex3f(-0.5f, -0.5f, -0.5f);
+	glTexCoord2f(0, 1); glVertex3f(-0.5f, -0.5f, 0.5f);
+	glTexCoord2f(1, 1); glVertex3f(0.5f, -0.5f, 0.5f);
+	glTexCoord2f(1, 0); glVertex3f(0.5f, -0.5f, -0.5f);
+	glEnd();
+
+	// Restore enable bits and matrix
+	glPopAttrib();
+	glPopMatrix();
 }
 
 void ground(float h) 
@@ -285,7 +401,7 @@ void y_box(float h) {
 
 	glEnd();
 }
-
+/*
 int main()
 {
     ModelerControl controls[NUMCONTROLS ];
@@ -313,3 +429,4 @@ int main()
 
     return ModelerApplication::Instance()->Run();
 }
+*/

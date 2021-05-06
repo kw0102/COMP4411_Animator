@@ -2,6 +2,11 @@
 #include <FL/gl.h>
 #include <GL/glu.h>
 #include <cstdio>
+#include <math.h>
+
+#ifndef M_PI
+#define M_PI 3.141592653589793238462643383279502
+#endif
 
 // ********************************************************
 // Support functions from previous version of modeler
@@ -292,9 +297,88 @@ void drawBox( double x, double y, double z )
     }
 }
 
-void drawTextureBox( double x, double y, double z )
+
+void drawTextureBox(double x, double y, double z, int texture)
 {
-    // NOT IMPLEMENTED, SORRY (ehsu)
+    ModelerDrawState* mds = ModelerDrawState::Instance();
+
+    if (mds->m_drawMode != NORMAL)
+        drawBox(x, y, z);
+
+    _setupOpenGl();
+
+    if (mds->m_rayFile)
+    {
+        _dump_current_modelview();
+        fprintf(mds->m_rayFile,
+            "scale(%f,%f,%f,translate(0.5,0.5,0.5,box {\n", x, y, z);
+        _dump_current_material();
+        fprintf(mds->m_rayFile, "})))\n");
+    }
+    else
+    {
+        /* remember which matrix mode OpenGL was in. */
+        int savemode;
+        glGetIntegerv(GL_MATRIX_MODE, &savemode);
+
+        /* switch to the model matrix and scale by x,y,z. */
+        glMatrixMode(GL_MODELVIEW);
+        glPushMatrix();
+        glScaled(x, y, z);
+
+        glEnable(GL_TEXTURE_2D);
+        glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
+        glBindTexture(GL_TEXTURE_2D, texture);
+
+
+        glBegin(GL_QUADS);
+
+        glNormal3d(0.0, 0.0, -1.0);
+        glTexCoord2f(.75f, .50f); glVertex3d(0.0, 0.0, 0.0);
+        glTexCoord2f(.75f, 1.0f); glVertex3d(0.0, 1.0, 0.0);
+        glTexCoord2f(1.0f, 1.0f); glVertex3d(1.0, 1.0, 0.0);
+        glTexCoord2f(1.0f, .50f); glVertex3d(1.0, 0.0, 0.0);
+
+        glNormal3d(0.0, -1.0, 0.0);
+        glTexCoord2f(.75f, .00f); glVertex3d(0.0, 0.0, 0.0);
+        glTexCoord2f(.75f, .50f); glVertex3d(1.0, 0.0, 0.0);
+        glTexCoord2f(1.0f, .50f); glVertex3d(1.0, 0.0, 1.0);
+        glTexCoord2f(1.0f, .00f); glVertex3d(0.0, 0.0, 1.0);
+
+        glNormal3d(-1.0, 0.0, 0.0);
+
+        glTexCoord2f(.75f, .50f); glVertex3d(0.0, 0.0, 0.0);
+        glTexCoord2f(.50f, .50f); glVertex3d(0.0, 0.0, 1.0);
+        glTexCoord2f(.55f, 1.0f); glVertex3d(0.0, 1.0, 1.0);
+        glTexCoord2f(.75f, 1.0f); glVertex3d(0.0, 1.0, 0.0);
+
+        glNormal3d(0.0, 0.0, 1.0);
+        glTexCoord2f(.25f, .50f); glVertex3d(0.0, 0.0, 1.0);
+        glTexCoord2f(0.0f, .50f); glVertex3d(1.0, 0.0, 1.0);
+        glTexCoord2f(0.0f, 1.0f); glVertex3d(1.0, 1.0, 1.0);
+        glTexCoord2f(.25f, 1.0f); glVertex3d(0.0, 1.0, 1.0);
+
+        glNormal3d(0.0, 1.0, 0.0);
+        glTexCoord2f(.50f, .50f); glVertex3d(0.0, 1.0, 0.0);
+        glTexCoord2f(.50f, .50f); glVertex3d(0.0, 1.0, 1.0);
+        glTexCoord2f(.50f, .50f); glVertex3d(1.0, 1.0, 1.0);
+        glTexCoord2f(.50f, .50f); glVertex3d(1.0, 1.0, 0.0);
+
+        glNormal3d(1.0, 0.0, 0.0);
+        glTexCoord2f(.25f, 0.5f); glVertex3d(1.0, 0.0, 0.0);
+        glTexCoord2f(.25f, 1.0f); glVertex3d(1.0, 1.0, 0.0);
+        glTexCoord2f(.50f, 1.0f); glVertex3d(1.0, 1.0, 1.0);
+        glTexCoord2f(.50f, .50f); glVertex3d(1.0, 0.0, 1.0);
+
+        glEnd();
+
+        glDisable(GL_TEXTURE_2D);
+
+        /* restore the model matrix stack, and switch back to the matrix
+        mode we were in. */
+        glPopMatrix();
+        glMatrixMode(savemode);
+    }
 }
 
 void drawCylinder( double h, double r1, double r2 )
@@ -326,6 +410,7 @@ void drawCylinder( double h, double r1, double r2 )
     }
     else
     {
+
         GLUquadricObj* gluq;
         
         /* GLU will again do the work.  draw the sides of the cylinder. */
@@ -414,3 +499,71 @@ void drawTriangle( double x1, double y1, double z1,
         glEnd();
     }
 }
+
+
+void drawTorus(double r0, double r1)
+{
+    ModelerDrawState* mds = ModelerDrawState::Instance();
+    int divisions;
+
+    _setupOpenGl();
+
+    switch (mds->m_quality)
+    {
+    case HIGH:
+        divisions = 32; break;
+    case MEDIUM:
+        divisions = 20; break;
+    case LOW:
+        divisions = 12; break;
+    case POOR:
+        divisions = 8; break;
+    }
+
+    double astep = 2 * M_PI / divisions;
+
+    double a0_0 = 0;
+    double a0_1 = astep;
+
+    for (int i = 0; i < divisions; i++) {
+        double a1_0 = 0;
+        double a1_1 = astep;
+        for (int j = 0; j < divisions; j++) {
+            double v[3], n[3];
+            glBegin(GL_QUADS);
+            calculateTorusVertex(a0_0, r0, a1_0, r1, v, n);
+            glNormal3dv(n);
+            glVertex3dv(v);
+            calculateTorusVertex(a0_1, r0, a1_0, r1, v, n);
+            glNormal3dv(n);
+            glVertex3dv(v);
+            calculateTorusVertex(a0_1, r0, a1_1, r1, v, n);
+            glNormal3dv(n);
+            glVertex3dv(v);
+            calculateTorusVertex(a0_0, r0, a1_1, r1, v, n);
+            glNormal3dv(n);
+            glVertex3dv(v);
+            glEnd();
+            a1_0 = a1_1;
+            a1_1 += astep;
+        }
+        a0_0 = a0_1;
+        a0_1 += astep;
+    }
+
+}
+
+void calculateTorusVertex(double a0, double r0, double a1, double r1, double* v, double* n)
+{
+    double cx = r0 * cos(a0);
+    double cz = -r0 * sin(a0);
+
+    n[0] = cos(a0) * cos(a1);
+    n[1] = sin(a1);
+    n[2] = -cos(a1) * sin(a0);
+
+    v[0] = cx + r1 * n[0];
+    v[1] = r1 * n[1];
+    v[2] = cz + r1 * n[2];
+};
+

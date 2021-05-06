@@ -52,7 +52,7 @@ protected:
 	void indicatorRangeMarkerRange(float fMin, float fMax);
 	bool openAniScript(const char* szFileName);
 	
-private:
+public:
 
 	int m_iCurrControlCount;
 	ValueChangedCallback* m_pcbfValueChangedCallback;

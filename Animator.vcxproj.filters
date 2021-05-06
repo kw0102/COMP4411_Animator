@@ -69,9 +69,6 @@
     <ClCompile Include="modelerview.cpp">
       <Filter>Source Files\Model</Filter>
     </ClCompile>
-    <ClCompile Include="robotarm.cpp">
-      <Filter>Source Files\Model</Filter>
-    </ClCompile>
     <ClCompile Include="bitmap.cpp">
       <Filter>Source Files\Particles</Filter>
     </ClCompile>
@@ -105,6 +102,16 @@
     <ClCompile Include="SimplexNoise.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Spongebob.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="LSystem.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="IK.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Metaball.cpp">
     <ClCompile Include="BezierCurve.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -185,6 +192,22 @@
     <ClInclude Include="SimplexNoise.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Spongebob.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="LSystem.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="MarchingCubes.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="IK.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Metaball.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="modelerglobals.h">
     <ClInclude Include="BezierCurve.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -208,5 +231,13 @@
     <None Include="skelrenamer.pl">
       <Filter>Resource Files</Filter>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="assets\uw_bk.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="uw_bk.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
   </ItemGroup>
 </Project>

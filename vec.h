@@ -229,6 +229,7 @@ public:
 	template<class U> friend Vec3<U> minimum( const Vec3<U>& a, const Vec3<U>& b );
 	template<class U> friend Vec3<U> maximum( const Vec3<U>& a, const Vec3<U>& b );
 	template<class U> friend Vec3<U> prod( const Vec3<U>& a, const Vec3<U>& b );
+	template<class U> friend Vec3<U> cross(const Vec3<U>& a, const Vec3<U>& b);
 
 #else // _MSC_VER >= 1300
 
@@ -798,6 +799,13 @@ inline Vec3<T> maximum(const Vec3<T>& a, const Vec3<T>& b) {
 template <class T>
 inline Vec3<T> prod(const Vec3<T>& a, const Vec3<T>& b ) {
 	return Vec3<T>( a.n[0]*b.n[0], a.n[1]*b.n[1], a.n[2]*b.n[2] );
+}
+
+template <class T>
+inline Vec3<T> cross(const Vec3<T>& a, const Vec3<T>& b) {
+	return Vec3<T>(a.n[1] * b.n[2] - a.n[2] * b.n[1],
+		a.n[2] * b.n[0] - a.n[0] * b.n[2],
+		a.n[0] * b.n[1] - a.n[1] * b.n[0]);
 }
 
 template <class T>
