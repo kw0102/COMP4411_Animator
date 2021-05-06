@@ -114,6 +114,16 @@ public:
 	Point windowToGrid( Point p ) ;
 	Point gridToWindow( Point p ) ;
 
+	int currCurveAdaptive() const;
+	void currCurveAdaptive(bool bWrap);
+
+	void tensionActiveCurves(double dTension);
+	void tensionCurve(int iCurve, double dTension);
+	double currCurveTension() const;
+	void currCurveTension(double dTension);
+
+
+
 protected:
 	int m_iEventToDo;
 	bool m_bHasEvent;
