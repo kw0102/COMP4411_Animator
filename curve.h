@@ -53,12 +53,18 @@ public:
 	void toStream(std::ostream& output_stream) const;
 	void fromStream(std::istream& input_stream);
 
+
+	void adaptive(bool bAdaptive);
+	bool adaptive() const;
+
+	double tension();
+	void tension(double dtension);
 protected:
 	void init(const float fStartYValue = 0.0f);
 	void reevaluate(void) const;
 	// this must be called when a control point is added
 	void sortControlPoints(void) const;
-
+	
 	const CurveEvaluator* m_pceEvaluator;
 
 	mutable std::vector<Point> m_ptvCtrlPts;
@@ -67,6 +73,9 @@ protected:
 
 	float m_fMaxX;
 	bool m_bWrap;
+	bool m_bAdaptive;
+	double m_dTension;
+
 	static float s_fCtrlPtXEpsilon;
 };
 

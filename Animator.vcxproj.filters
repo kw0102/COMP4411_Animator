@@ -112,6 +112,16 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Metaball.cpp">
+    <ClCompile Include="BezierCurve.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="BSpineCurve.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="CatmullRomCurve.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="subdivisionCurve.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -198,6 +208,16 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="modelerglobals.h">
+    <ClInclude Include="BezierCurve.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="BSplineCurve.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="CatmullRomCurve.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="subdivisionCurve.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -146,6 +146,9 @@
     </Bscmake>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="BezierCurve.cpp" />
+    <ClCompile Include="BSpineCurve.cpp" />
+    <ClCompile Include="CatmullRomCurve.cpp" />
     <ClCompile Include="curve.cpp">
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -260,8 +263,12 @@
     </ClCompile>
     <ClCompile Include="SimplexNoise.cpp" />
     <ClCompile Include="Spongebob.cpp" />
+    <ClCompile Include="subdivisionCurve.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="BezierCurve.h" />
+    <ClInclude Include="BSplineCurve.h" />
+    <ClInclude Include="CatmullRomCurve.h" />
     <ClInclude Include="curve.h" />
     <ClInclude Include="curveevaluator.h" />
     <ClInclude Include="IK.h" />
@@ -289,6 +296,7 @@
     <ClInclude Include="mat.h" />
     <ClInclude Include="SimplexNoise.h" />
     <ClInclude Include="Spongebob.h" />
+    <ClInclude Include="subdivisionCurve.h" />
     <ClInclude Include="vec.h" />
   </ItemGroup>
   <ItemGroup>
